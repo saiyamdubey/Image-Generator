@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator</title>
+    <title>AI Image Generato- Deepika ji </title>
     <link rel="stylesheet" href="./style.css">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 </head>
@@ -35,14 +35,10 @@
             const promptInput = document.getElementById("prompt-input").value;
             const imageGallery = document.getElementById("image-gallery");
             const videoGallery = document.getElementById("video-gallery");
-
-            // Clear previous results
             imageGallery.innerHTML = "";
             videoGallery.innerHTML = "";
-
             generateBtn.disabled = true;
             generateBtn.innerText = "Generating...";
-
             try {
                 const response = await fetch("/generate-media", {
                     method: "POST",
@@ -51,10 +47,7 @@
                     },
                     body: JSON.stringify({ prompt: promptInput })
                 });
-
                 const data = await response.json();
-
-                // Display images
                 if (data.imageUrls && data.imageUrls.length > 0) {
                     data.imageUrls.forEach(async (imageUrl) => {
                         const response = await fetch(imageUrl);
@@ -79,8 +72,6 @@
                         imageGallery.appendChild(imgCard);
                     });
                 }
-
-                // Display videos
                 if (data.videoUrls && data.videoUrls.length > 0) {
                     data.videoUrls.forEach(async (videoUrl) => {
                         const response = await fetch(videoUrl);
@@ -108,7 +99,6 @@
             } catch (error) {
                 console.error("Error:", error);
             }
-
             generateBtn.disabled = false;
             generateBtn.innerText = "Generate";
         });

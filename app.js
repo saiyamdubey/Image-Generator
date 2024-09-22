@@ -6,14 +6,11 @@ dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.static(path.join("public")));
 
 app.post("/generate-media", async (req, res) => {
     const { prompt } = req.body;
-    const API_KEY = process.env.PIXABAY_API_KEY;
-
     try {
         const imageResponse = await fetch(`https://pixabay.com/api/?key=45684768-73aac1d5f59f83ab66304ad54&q=${encodeURIComponent(prompt)}&image_type=photo`);
         const imageData = await imageResponse.json();
@@ -31,8 +28,7 @@ app.post("/generate-media", async (req, res) => {
     }
 });
 
-// Start the server
 app.listen(PORT, () => {
-    console.log("saiyam dubey")
+    console.log("saiyam")
     console.log(`Server running on http://localhost:${PORT}`);
 });
