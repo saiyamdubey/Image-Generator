@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join("public")));
 
-app.post("/generate-media", async (req, res) => {
+app.post("https://image-generator-delta-six.vercel.app/generate-media", async (req, res) => {
     const { prompt } = req.body;
     const API_KEY = process.env.PIXABAY_API_KEY;
 
