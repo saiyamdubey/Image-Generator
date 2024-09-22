@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <section class="image-generator">
+        <div class="content">
+            <h1>AI Image Generator Tool By Deepika Ji</h1>
+            <p>Convert your text into images and videos within seconds using this AI tool</p>
+            <form id="generate-form" action="#" method="POST">
+                <input type="text" id="prompt-input" placeholder="Describe what you want to see" required>
+                <button type="submit" id="generate-btn">Generate</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="image-gallery">
+        <div id="image-gallery" class="img-gallery"></div>
+    </section>
+
+    <section class="video-gallery">
+        <div id="video-gallery" class="vid-gallery"></div>
+    </section>
+
+    <script>
+        document.getElementById("generate-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const generateBtn = document.getElementById("generate-btn");
+            const promptInput = document.getElementById("prompt-input").value;
+            const imageGallery = document.getElementById("image-gallery");
+            const videoGallery = document.getElementById("video-gallery");
+
+            // Clear previous results
+            imageGallery.innerHTML = "";
+            videoGallery.innerHTML = "";
+
+            generateBtn.disabled = true;
+            generateBtn.innerText = "Generating...";
+
+            try {
+                const response = await fetch("/generate-media", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ prompt: promptInput })
+                });
+
+                const data = await response.json();
+
+                // Display images
+                if (data.imageUrls && data.imageUrls.length > 0) {
+                    data.imageUrls.forEach(async (imageUrl) => {
+                        const response = await fetch(imageUrl);
+                        const blob = await response.blob();
+                        const blobUrl = URL.createObjectURL(blob);
+
+                        const imgElement = document.createElement("img");
+                        imgElement.src = blobUrl;
+                        imgElement.alt = "Generated Image";
+                        imgElement.classList.add("generated-image");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = blobUrl;
+                        downloadLink.innerText = "Download Image";
+                        downloadLink.setAttribute("download", "ai-generated-image.png");
+                        downloadLink.classList.add("download-btn");
+
+                        const imgCard = document.createElement("div");
+                        imgCard.classList.add("img-card");
+                        imgCard.appendChild(imgElement);
+                        imgCard.appendChild(downloadLink);
+                        imageGallery.appendChild(imgCard);
+                    });
+                }
+
+                // Display videos
+                if (data.videoUrls && data.videoUrls.length > 0) {
+                    data.videoUrls.forEach(async (videoUrl) => {
+                        const response = await fetch(videoUrl);
+                        const blob = await response.blob();
+                        const blobUrl = URL.createObjectURL(blob);
+
+                        const videoElement = document.createElement("video");
+                        videoElement.src = blobUrl;
+                        videoElement.controls = true;
+                        videoElement.classList.add("generated-video");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = blobUrl;
+                        downloadLink.innerText = "Download Video";
+                        downloadLink.setAttribute("download", "ai-generated-video.mp4");
+                        downloadLink.classList.add("download-btn");
+
+                        const vidCard = document.createElement("div");
+                        vidCard.classList.add("vid-card");
+                        vidCard.appendChild(videoElement);
+                        vidCard.appendChild(downloadLink);
+                        videoGallery.appendChild(vidCard);
+                    });
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.innerText = "Generate";
+        });
+    </script>
+</body>
+</html>
