@@ -10,15 +10,15 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join("public")));
 
-app.post("https://image-generator-delta-six.vercel.app/generate-media", async (req, res) => {
+app.post("/generate-media", async (req, res) => {
     const { prompt } = req.body;
     const API_KEY = process.env.PIXABAY_API_KEY;
 
     try {
-        const imageResponse = await fetch(`https://pixabay.com/api/?key=${API_KEY}&q=${encodeURIComponent(prompt)}&image_type=photo`);
+        const imageResponse = await fetch(`https://pixabay.com/api/?key=45684768-73aac1d5f59f83ab66304ad54&q=${encodeURIComponent(prompt)}&image_type=photo`);
         const imageData = await imageResponse.json();
 
-        const videoResponse = await fetch(`https://pixabay.com/api/videos/?key=${API_KEY}&q=${encodeURIComponent(prompt)}`);
+        const videoResponse = await fetch(`https://pixabay.com/api/videos/?key=45684768-73aac1d5f59f83ab66304ad54&q=${encodeURIComponent(prompt)}`);
         const videoData = await videoResponse.json();
 
         const imageUrls = imageData.hits.map(hit => hit.webformatURL);
